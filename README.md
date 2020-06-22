@@ -20,6 +20,22 @@ In this final project, you will implement the missing parts in the schematic. To
 6. Bounding boxes are matched using the feature matching.
 7. TTC lidar is calculated using the cısecutive frames of each bounding box.
 
+## FP.1 : Match 3D Objects
+
+3D objects are matched using bounding boxes and the feature matches included in the consecutive bounding boxes. In resulting code each bounding box is assigned the match candidate with the highest number of occurrences.
+
+## FP.2 : Compute Lidar-based TTC
+
+Since lidar does not measure velocity directly, matching 3D objects is necessary for this step. Once we have matched objects, we filtered the laser beams to include the preceeding vehicle. This is done by removing next lanes and adding median filter. For median filter we are sorting distances with respect to "x" and choosing the middle point. By doing this, assuming that there are not many outliers, we dont include them to calculate the distance.
+
+## FP.3 : Associate Keypoint Correspondences with Bounding Boxes
+
+This function is called for each bounding box, and it loops through every matched keypoint pair in an image. If the keypoint falls within the bounding box region-of-interest (ROI) in the current frame, the keypoint match is associated with the current BoundingBox data structure
+
+## FP.4 : Compute Camera-based TTC
+
+This function is taken from example provided in an earlier lesson. It uses distance ratios on keypoints matched between frames to determine the rate of scale change within an image. This rate of scale change can be used to estimate the TTC. Like the lidar TTC estimation, this function uses the median distance ratio to avoid the impact of outliers. Therefore if there are many outliers this algorithm does not perform well.
+
 ## FP.5 : Performance Evaluation 1
 
 Even if preceding vehicle comes closer at frame of the lidar data calculated TTC value for lidar does not decreases monotonocially. This is mainly due to increased box size with decreased distance. Even if we implemented a median filter it only helps a little. Therefore, outlier detection should be implemented as a next step.
